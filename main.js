@@ -139,8 +139,9 @@ const populateAdminTable = () => {
             <td>${user.mobile}</td>
             <td>${user.gender}</td>
             <td>${user.city}</td>
+            <td><code>${user.password}</code></td>
         </tr>
-    `).join('') || '<tr><td colspan="5" style="text-align:center">No users registered yet.</td></tr>';
+    `).join('') || '<tr><td colspan="6" style="text-align:center">No users registered yet.</td></tr>';
 };
 
 const triggerUnlockSequence = () => {
