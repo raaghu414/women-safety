@@ -89,6 +89,10 @@ registrationForm.addEventListener('submit', (e) => {
     localStorage.setItem('women_safety_users', JSON.stringify(users));
 
     alert("Registration Successful! Please login.");
+    
+    // Live update Admin Portal if currently viewing
+    populateAdminTable();
+    
     registerCard.style.display = 'none';
     loginCard.style.display = 'block';
 });
