@@ -197,15 +197,13 @@ const sendEmergencyWhatsApp = (pos) => {
     const lng = pos.coords.longitude.toFixed(6);
     const mapsLink = `https://www.google.com/maps?q=${lat},${lng}`;
     
-    const message = encodeURIComponent(
-        `🚨 EMERGENCY ALERT - WOMEN SAFETY 🚨\n\n` +
+    const messageText = `🚨 EMERGENCY ALERT - WOMEN SAFETY 🚨\n\n` +
         `User: ${session.name || 'Unknown'}\n` +
         `Mobile: ${session.mobile || 'Unknown'}\n` +
         `Location: ${session.city || 'Unknown'}\n` +
         `Coordinates: ${lat}, ${lng}\n` +
         `Live Map Link: ${mapsLink}\n\n` +
-        `Help is needed immediately! Triggered by Police Siren/SOS.`
-    );
+        `Help is needed immediately! Triggered by Police Siren/SOS.`;
 
     const contacts = [
         '+919148433466', // Raghavendra
@@ -214,11 +212,24 @@ const sendEmergencyWhatsApp = (pos) => {
         '+919901828480'  // Prahruth
     ];
 
-    // Opens primary contact directly
-    window.open(`https://wa.me/${contacts[0]}?text=${message}`, '_blank');
+    const waUrl = `https://wa.me/${contacts[0]}?text=${encodeURIComponent(messageText)}`;
+
+    // Try Web Share API first (Excellent for Mobile)
+    if (navigator.share) {
+        navigator.share({
+            title: 'EMERGENCY - WOMEN SAFETY',
+            text: messageText,
+            url: mapsLink
+        }).catch(() => {
+            // Fallback to WhatsApp link
+            window.location.href = waUrl;
+        });
+    } else {
+        // Fallback to direct redirect for WhatsApp (Bypasses popup blockers)
+        window.location.href = waUrl;
+    }
     
-    // Log for others (browsers block multiple popups, so we prioritize the leader)
-    console.log("Emergency Broadcast sent to all nodes.");
+    console.log("Emergency Broadcast initiated.");
 };
 
 const startRealTimeTracking = () => {
