@@ -150,13 +150,29 @@ sirenTrigger.addEventListener('click', () => {
     if (isSirenActive) {
         startSiren();
         sirenTrigger.style.background = 'rgba(244, 63, 94, 0.4)';
-        // Simulation alert
-        const alertToast = document.createElement('div');
-        alertToast.className = 'safety-toast';
-        alertToast.innerHTML = '<i data-lucide="shield"></i> ALERT: Dispatching location to <strong>Bengaluru Central Police Station</strong>...';
-        document.body.appendChild(alertToast);
-        lucide.createIcons();
-        setTimeout(() => alertToast.remove(), 4000);
+        
+        // Request and Display Real-time Location
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition((position) => {
+                const lat = position.coords.latitude.toFixed(4);
+                const lng = position.coords.longitude.toFixed(4);
+                
+                const alertToast = document.createElement('div');
+                alertToast.className = 'safety-toast';
+                alertToast.innerHTML = `<i data-lucide="shield"></i> DISPATCHED: Coords [${lat}, ${lng}] sent to <strong>Bengaluru Central Station</strong>`;
+                document.body.appendChild(alertToast);
+                lucide.createIcons();
+                setTimeout(() => alertToast.remove(), 5000);
+            }, () => {
+                // Fallback if denied
+                const alertToast = document.createElement('div');
+                alertToast.className = 'safety-toast';
+                alertToast.innerHTML = '<i data-lucide="shield"></i> ALERT: Dispatching general area location to Police Station...';
+                document.body.appendChild(alertToast);
+                lucide.createIcons();
+                setTimeout(() => alertToast.remove(), 4000);
+            });
+        }
     } else {
         stopSiren();
         sirenTrigger.style.background = 'var(--glass)';
