@@ -1,22 +1,45 @@
-# Aura Safety - Advanced Women's Safety Platform
+# WOMEN SAFETY | Advanced Protection Platform
 
-A premium website designed to provide safety tools and information for women. 
+![Branding](https://img.shields.io/badge/Security-Advanced-red?style=for-the-badge)
+![Tech](https://img.shields.io/badge/Tech-Vanilla_JS_|_Vite-blue?style=for-the-badge)
 
-## Developed By
-- Bindu
-- Disha
-- Prahruth
-- Raaghu
+**WOMEN SAFETY** is a state-of-the-art safety ecosystem designed to provide immediate protection and comprehensive security management. Built with a focus on high-stakes emergency response and intuitive user oversight.
 
-## Features
-- **SOS Dashboard**: Instant emergency alerts.
-- **Stealth Mode**: Disguises the platform as a weather/news site.
-- **Fake Call Simulation**: Realistic incoming call simulation.
-- **SafeRoute Navigation**: Real-time safety map.
-- **AI Guardian**: 24/7 safety assistant.
+## 🚀 Core Features
 
-## Tech Stack
-- HTML5, CSS3 (Vanilla), JavaScript (ES6+)
-- Lucide Icons
-- Leaflet.js
-- Vite (Dev Server)
+### 1. Dual-Phase Authentication
+- **Secure Registration**: Mandatory user onboarding collecting essential emergency data (Mobile, City, Gender).
+- **Credential Validation**: Strict login system verifying users against a locally persisted database.
+
+### 2. Emergency Response Suite (Quantum Shield)
+- **Multi-Channel SOS**: Triggers immediate SMS and WhatsApp alerts to emergency contacts.
+- **Police Siren with Delay**: High-decibel audio alarm with a 5-second broadcast countdown for intentional activation.
+- **Real-time Tracking**: Live GPS coordinate monitoring with estimated help arrival (ETA) calculation.
+- **WhatsApp Integration**: Automated location sharing including live Google Maps links and user profiles.
+
+### 3. Administrative Command Center
+- **User Database**: Full visibility into registered safety nodes (users) including their credentials.
+- **Data Governance**: Exportable JSON backups and secure database reset capabilities.
+- **Real-time Sync**: Dashboard updates instantly when new users register across the network.
+
+### 4. Tactical Disguise & Tools
+- **Stealth Mode**: Instantly transforms the app into a neutral news portal for discreet operation.
+- **Fake Call Simulation**: Professional-grade incoming call interface to deter potential threats.
+- **Audio Surveillance**: Discreet background recording for evidence gathering.
+
+## 🛠️ Tech Stack
+- **Frontend**: Vanilla HTML5, CSS3 (Glassmorphism), JavaScript (ESM)
+- **Maps**: Leaflet.js for interactive safety monitoring.
+- **Icons**: Lucide Icons for high-fidelity UI elements.
+- **Storage**: Browser-based LocalStorage for zero-latency data persistence.
+- **Deployment**: Optimized via Vite.
+
+## 👥 Development Team
+Architected and developed with passion by:
+- **Bindu**
+- **Disha**
+- **Prahruth**
+- **Raghavendra**
+
+---
+*Developed for a safer tomorrow. 2026 WOMEN SAFETY Architecture.*
