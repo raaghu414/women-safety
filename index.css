@@ -587,3 +587,70 @@ th { padding: 15px; color: var(--text-muted); font-size: 0.85rem; text-transform
 td { padding: 15px; border-bottom: 1px solid rgba(255, 255, 255, 0.03); color: var(--text); font-size: 0.95rem; }
 tr:hover { background: rgba(255, 255, 255, 0.02); }
 
+/* Live Tracking Panel */
+.tracking-panel {
+  position: fixed;
+  bottom: 40px;
+  right: 40px;
+  width: 350px;
+  background: rgba(3, 7, 18, 0.95);
+  border: 1px solid var(--danger);
+  border-radius: 24px;
+  padding: 25px;
+  z-index: 2000;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 20px 40px rgba(244, 63, 94, 0.3), 0 0 20px rgba(244, 63, 94, 0.1);
+  transform: translateX(120%);
+  transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.tracking-panel.active {
+  transform: translateX(0);
+}
+
+.tracking-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid rgba(244, 63, 94, 0.2);
+  padding-bottom: 15px;
+}
+
+.live-dot {
+  width: 10px; height: 10px;
+  background: var(--danger);
+  border-radius: 50%;
+  animation: blink 1s infinite;
+}
+
+.tracking-header h3 { font-size: 0.9rem; letter-spacing: 2px; color: var(--danger); font-weight: 800; }
+
+.close-btn {
+  margin-left: auto;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.tracking-body { display: flex; flex-direction: column; gap: 15px; }
+
+.track-item { display: flex; flex-direction: column; gap: 5px; }
+.track-item label { font-size: 0.65rem; color: var(--text-muted); letter-spacing: 1px; font-weight: 700; }
+.track-item span { font-size: 1.1rem; color: var(--text); font-weight: 600; }
+
+.mono { font-family: monospace; letter-spacing: 1px; color: var(--accent) !important; }
+
+.track-item.highlight span { color: var(--danger) !important; font-size: 1.4rem; font-weight: 800; }
+
+.tracking-footer {
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+

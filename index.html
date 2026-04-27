@@ -261,6 +261,36 @@
             </div>
         </section>
 
+        <!-- Live Tracking Panel -->
+        <div id="tracking-panel" class="tracking-panel">
+            <div class="tracking-header">
+                <span class="live-dot"></span>
+                <h3>LIVE EMERGENCY TRACKING</h3>
+                <button id="close-tracking" class="close-btn">&times;</button>
+            </div>
+            <div class="tracking-body">
+                <div class="track-item">
+                    <label>USER STATUS</label>
+                    <span id="track-user-name">Loading...</span>
+                </div>
+                <div class="track-item">
+                    <label>COORDINATES</label>
+                    <span id="track-coords" class="mono">---, ---</span>
+                </div>
+                <div class="track-item">
+                    <label>LAST UPDATE</label>
+                    <span id="track-time">--:--:--</span>
+                </div>
+                <div class="track-item highlight">
+                    <label>ESTIMATED ARRIVAL (HELP)</label>
+                    <span id="track-eta">CALCULATING...</span>
+                </div>
+            </div>
+            <div class="tracking-footer">
+                <p>Broadcasting to Emergency Contacts via WhatsApp...</p>
+            </div>
+        </div>
+
         <!-- Map Section -->
         <section id="map-section" class="section">
             <div class="map-wrapper">

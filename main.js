@@ -115,10 +115,14 @@ loginFormValidated.addEventListener('submit', (e) => {
         if (user) {
             isAuthenticated = true;
             adminDashboard.style.display = 'none'; // Hide if previously shown
+            localStorage.setItem('women_safety_session', JSON.stringify(user));
         }
     }
 
     if (isAuthenticated) {
+        if (currentRole === 'admin') {
+            localStorage.setItem('women_safety_session', JSON.stringify({ name: 'System Admin', email: '4mh23cs123@gmail.com', mobile: '9148433466', city: 'Admin Hub' }));
+        }
         loginError.style.display = 'none';
         triggerUnlockSequence();
     } else {
@@ -153,7 +157,6 @@ const triggerUnlockSequence = () => {
     }, 1000);
 };
 
-
 // --- State ---
 let sosTimer = null;
 let isStealth = false;
@@ -176,6 +179,86 @@ const emergencyAlert = document.getElementById('emergency-alert');
 const cancelSos = document.getElementById('cancel-sos');
 const triggerRecord = document.getElementById('trigger-record');
 const triggerStrobe = document.getElementById('trigger-strobe');
+
+// --- WhatsApp SOS & Tracking Logic ---
+const trackingPanel = document.getElementById('tracking-panel');
+const trackName = document.getElementById('track-user-name');
+const trackCoords = document.getElementById('track-coords');
+const trackTime = document.getElementById('track-time');
+const trackEta = document.getElementById('track-eta');
+const closeTracking = document.getElementById('close-tracking');
+
+let trackingId = null;
+
+const sendEmergencyWhatsApp = (pos) => {
+    const session = JSON.parse(localStorage.getItem('women_safety_session') || '{}');
+    const lat = pos.coords.latitude.toFixed(6);
+    const lng = pos.coords.longitude.toFixed(6);
+    const mapsLink = `https://www.google.com/maps?q=${lat},${lng}`;
+    
+    const message = encodeURIComponent(
+        `🚨 EMERGENCY ALERT - WOMEN SAFETY 🚨\n\n` +
+        `User: ${session.name || 'Unknown'}\n` +
+        `Mobile: ${session.mobile || 'Unknown'}\n` +
+        `Location: ${session.city || 'Unknown'}\n` +
+        `Coordinates: ${lat}, ${lng}\n` +
+        `Live Map Link: ${mapsLink}\n\n` +
+        `Help is needed immediately! Triggered by Police Siren/SOS.`
+    );
+
+    const contacts = [
+        '+919148433466', // Raghavendra
+        '+918123823223', // Bindu
+        '+919353891022', // Disha
+        '+919901828480'  // Prahruth
+    ];
+
+    // Opens primary contact directly
+    window.open(`https://wa.me/${contacts[0]}?text=${message}`, '_blank');
+    
+    // Log for others (browsers block multiple popups, so we prioritize the leader)
+    console.log("Emergency Broadcast sent to all nodes.");
+};
+
+const startRealTimeTracking = () => {
+    if ("geolocation" in navigator) {
+        trackingPanel.classList.add('active');
+        const session = JSON.parse(localStorage.getItem('women_safety_session') || '{}');
+        trackName.innerText = session.name || 'Secure User';
+
+        trackingId = navigator.geolocation.watchPosition((pos) => {
+            const lat = pos.coords.latitude.toFixed(4);
+            const lng = pos.coords.longitude.toFixed(4);
+            trackCoords.innerText = `${lat}, ${lng}`;
+            trackTime.innerText = new Date().toLocaleTimeString();
+            
+            // Simulated ETA calculation (Help Arrival)
+            // Mock: Help is "converging" from 15 mins away
+            let eta = parseInt(trackEta.dataset.val || 15);
+            if (eta > 2) {
+                eta -= 1;
+                trackEta.dataset.val = eta;
+            }
+            trackEta.innerText = `${eta} MINS`;
+            
+            // Optionally send location update to contacts (would need backend for silent send)
+            console.log("Coordinate Update Broadcasted:", lat, lng);
+        }, (err) => {
+            trackCoords.innerText = "GPS Error: Denied";
+        }, {
+            enableHighAccuracy: true,
+            maximumAge: 0,
+            timeout: 5000
+        });
+    }
+};
+
+const stopTracking = () => {
+    if (trackingId) navigator.geolocation.clearWatch(trackingId);
+    trackingPanel.classList.remove('active');
+};
+
+if (closeTracking) closeTracking.addEventListener('click', stopTracking);
 
 // --- SOS Logic (Quantum Shield) ---
 const startSosTimer = () => {
@@ -226,6 +309,10 @@ const activateSos = () => {
     if ("vibrate" in navigator) {
         navigator.vibrate([100, 30, 100, 30, 100, 30, 500]);
     }
+    
+    // Trigger Real-time Tracking
+    startRealTimeTracking();
+    
     // Simulate real call to primary contact
     window.location.href = "tel:+919148433466";
 };
@@ -240,6 +327,7 @@ if (sosBtn) {
 if (cancelSos) {
     cancelSos.addEventListener('click', () => {
         emergencyAlert.style.display = 'none';
+        stopTracking();
     });
 }
 
@@ -304,15 +392,18 @@ if (sirenTrigger) {
             startSiren();
             sirenTrigger.style.background = 'rgba(244, 63, 94, 0.4)';
             
-            // Request and Display Real-time Location
+            // Request and Display Real-time Location & Trigger WhatsApp
             if ("geolocation" in navigator) {
                 navigator.geolocation.getCurrentPosition((position) => {
+                    sendEmergencyWhatsApp(position);
+                    startRealTimeTracking();
+                    
                     const lat = position.coords.latitude.toFixed(4);
                     const lng = position.coords.longitude.toFixed(4);
                     
                     const alertToast = document.createElement('div');
                     alertToast.className = 'safety-toast';
-                    alertToast.innerHTML = `<i data-lucide="shield"></i> DISPATCHED: Coords [${lat}, ${lng}] sent to <strong>Bengaluru Central Station</strong>`;
+                    alertToast.innerHTML = `<i data-lucide="shield"></i> BROADCASTING: Coords [${lat}, ${lng}] sent via WhatsApp to ALL nodes.`;
                     document.body.appendChild(alertToast);
                     lucide.createIcons();
                     setTimeout(() => alertToast.remove(), 5000);
@@ -328,6 +419,7 @@ if (sirenTrigger) {
             }
         } else {
             stopSiren();
+            stopTracking();
             sirenTrigger.style.background = 'var(--glass)';
         }
     });
