@@ -192,7 +192,14 @@ const clearSosTimer = () => {
 
 const activateSos = () => {
     emergencyAlert.style.display = 'flex';
-    emergencyAlert.querySelector('p').innerHTML = "Calling <strong>Raaghu (+919148433466)</strong>... <br>GPS tracking active.";
+    emergencyAlert.querySelector('p').innerHTML = `
+        Sending SOS to: <br>
+        <strong>Raghavendra (+919148433466)</strong><br>
+        <strong>Bindu (+918123823223)</strong><br>
+        <strong>Disha (+919353891022)</strong><br>
+        <strong>Prahruth (+919901828480)</strong><br>
+        <span style="color:var(--primary); font-size: 0.8rem; margin-top: 10px; display: block;">GPS coordinates broadcasted to all nodes.</span>
+    `;
     
     // Audio Alarm
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -219,7 +226,7 @@ const activateSos = () => {
     if ("vibrate" in navigator) {
         navigator.vibrate([100, 30, 100, 30, 100, 30, 500]);
     }
-    // Simulate real call
+    // Simulate real call to primary contact
     window.location.href = "tel:+919148433466";
 };
 
