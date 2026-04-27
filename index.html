@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AURA | Advanced Safety Architecture</title>
+    <meta name="description" content="Aura Safety - The most advanced protection platform.">
+    <link rel="stylesheet" href="./index.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+    <div id="cursor-glow"></div>
+    <div id="app">
+        <!-- Dev Recognition Header -->
+        <div class="dev-bar">
+            <div class="dev-content">
+                <span>Architected by: <strong>Bindu • Disha • Prahruth • Raaghu</strong></span>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="site-nav">
+            <div class="logo">AURA<span>_</span></div>
+            <div class="nav-links">
+                <a href="#hero">Genesis</a>
+                <a href="#features">Core</a>
+                <a href="#dashboard">Shield</a>
+                <a href="#map-section">Atlas</a>
+            </div>
+            <div class="nav-actions">
+                <div class="safety-badge">WOMEN SAFETY</div>
+                <button id="stealth-toggle" class="stealth-btn">
+                    <i data-lucide="eye-off"></i>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <header id="hero" class="hero-section">
+            <div class="floating-blob blob-1"></div>
+            <div class="floating-blob blob-2"></div>
+            
+            <div class="hero-content">
+                <div class="badge">SECURED BY AI</div>
+                <h1 class="hero-title glow-text">WOMEN <br>SAFETY</h1>
+                <div class="hero-developers">
+                    <div class="dev-col">
+                        <span>Bindu</span>
+                        <span>Raaghu</span>
+                    </div>
+                    <div class="dev-col">
+                        <span>Disha</span>
+                        <span>Prahruth</span>
+                    </div>
+                </div>
+                <div class="hero-btns">
+                    <button class="btn-glow" onclick="document.getElementById('dashboard').scrollIntoView({behavior:'smooth'})">
+                        Initialize Shield <i data-lucide="chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="hero-visual">
+                <div class="shield-orb">
+                    <div class="orb-inner"></div>
+                    <div class="orb-ring"></div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Advanced Features -->
+        <section id="features" class="section">
+            <div class="section-header">
+                <h2 class="section-title">Safety Neural Link</h2>
+                <div class="title-underline"></div>
+            </div>
+            <div class="features-grid-advanced">
+                <div class="adv-card">
+                    <div class="card-glow"></div>
+                    <div class="card-content">
+                        <i data-lucide="zap"></i>
+                        <h3>Quantum SOS</h3>
+                        <p>Zero-latency emergency broadcasting with multi-layered encryption.</p>
+                    </div>
+                </div>
+                <div class="adv-card">
+                    <div class="card-glow"></div>
+                    <div class="card-content">
+                        <i data-lucide="shield-check"></i>
+                        <h3>Aura Ghost</h3>
+                        <p>Advanced stealth masking that turns your interface into an innocuous news feed.</p>
+                    </div>
+                </div>
+                <div class="adv-card">
+                    <div class="card-glow"></div>
+                    <div class="card-content">
+                        <i data-lucide="navigation"></i>
+                        <h3>SafeAtlas</h3>
+                        <p>Real-time safety pathfinding using crowdsourced risk analysis.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Protection Dashboard -->
+        <section id="dashboard" class="dashboard-section section">
+            <div class="dashboard-container">
+                <div class="dashboard-grid">
+                    <div class="dashboard-left">
+                        <div class="sos-control">
+                            <div id="sos-trigger" class="main-sos">
+                                <div class="sos-ripple-ring"></div>
+                                <div class="sos-ripple-ring" style="animation-delay: 1s"></div>
+                                <div class="sos-inner">
+                                    <span class="sos-label">ACTIVATE</span>
+                                    <span class="sos-sh">SHIELD</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dashboard-right">
+                        <div class="control-panel">
+                            <button id="trigger-fake-call" class="panel-btn">
+                                <i data-lucide="phone-incoming"></i>
+                                <span>Aura Call</span>
+                            </button>
+                            <button id="trigger-siren" class="panel-btn">
+                                <i data-lucide="megaphone"></i>
+                                <span>Police Siren</span>
+                            </button>
+                            <button id="trigger-record" class="panel-btn">
+                                <i data-lucide="mic"></i>
+                                <span>Discreet Record</span>
+                            </button>
+                            <button id="trigger-strobe" class="panel-btn">
+                                <i data-lucide="flashlight"></i>
+                                <span>Strobe Light</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Map Section -->
+        <section id="map-section" class="section">
+            <div class="map-wrapper">
+                <div id="map"></div>
+                <div class="map-overlay">
+                    <h3>Safety Density Map</h3>
+                    <div class="legend">
+                        <span class="l-item"><i style="background: #22c55e"></i> Secured</span>
+                        <span class="l-item"><i style="background: #ef4444"></i> Alert</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="site-footer">
+            <div class="footer-bottom">
+                <p>&copy; 2026 AURA ARCHITECTURE. All rights reserved.</p>
+                <div class="footer-links">
+                    <span>Developed with passion by the AURA Team</span>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Stealth UI -->
+        <div id="stealth-ui" class="stealth-ui">
+            <div class="news-app">
+                <header class="news-header">
+                    <i data-lucide="layout"></i> Prism News
+                </header>
+                <div class="news-feed">
+                    <div class="news-card">
+                        <div class="news-img"></div>
+                        <h4>Tech Trends: AI in 2026</h4>
+                        <p>Exploring the impact of neural networks on daily life...</p>
+                    </div>
+                </div>
+                <div id="exit-stealth" class="exit-hint">Hold logo for 3s to return</div>
+            </div>
+        </div>
+
+        <!-- Overlays -->
+        <div id="fake-call-overlay" class="fake-call-overlay">
+            <div class="caller-id">
+                <div class="avatar">H</div>
+                <h3>Home</h3>
+                <p>Incoming...</p>
+            </div>
+            <div class="call-controls">
+                <div id="decline-call" class="call-btn-round end"><i data-lucide="phone-off"></i></div>
+                <div id="accept-call" class="call-btn-round start"><i data-lucide="phone"></i></div>
+            </div>
+        </div>
+
+        <div id="emergency-alert" class="emergency-overlay" style="display: none;">
+            <div class="alert-box">
+                <i data-lucide="shield-alert" class="alert-icon"></i>
+                <h1>SHIELD ENGAGED</h1>
+                <p>Authorities have been pinged with your coordinates.</p>
+                <button id="cancel-sos" class="btn-cancel">DEACTIVATE</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="./main.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
