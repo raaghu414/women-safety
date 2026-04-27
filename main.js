@@ -3,8 +3,10 @@ import { initMap } from './map-module.js';
 // --- Mouse Effects ---
 const cursorGlow = document.getElementById('cursor-glow');
 document.addEventListener('mousemove', (e) => {
-    cursorGlow.style.left = e.clientX + 'px';
-    cursorGlow.style.top = e.clientY + 'px';
+    if (cursorGlow) {
+        cursorGlow.style.left = e.clientX + 'px';
+        cursorGlow.style.top = e.clientY + 'px';
+    }
 
     // Update card hover glow
     const cards = document.querySelectorAll('.adv-card');
@@ -16,6 +18,141 @@ document.addEventListener('mousemove', (e) => {
         card.style.setProperty('--y', `${y}px`);
     });
 });
+
+// --- Auth & Reveal Logic ---
+const authPortal = document.getElementById('auth-portal');
+const registerCard = document.getElementById('register-card');
+const loginCard = document.getElementById('login-card');
+const registrationForm = document.getElementById('registration-form');
+const loginFormValidated = document.getElementById('login-form-validated');
+const showLoginBtn = document.getElementById('show-login');
+const showRegisterBtn = document.getElementById('show-register');
+const loginError = document.getElementById('login-error');
+const userRoleBtn = document.getElementById('user-role-btn');
+const adminRoleBtn = document.getElementById('admin-role-btn');
+const unlockOverlay = document.getElementById('unlock-overlay');
+const app = document.getElementById('app');
+const adminDashboard = document.getElementById('admin-dashboard');
+const usersTableBody = document.getElementById('users-table-body');
+
+let currentRole = 'user';
+
+// Toggle between Register and Login
+showLoginBtn.addEventListener('click', () => {
+    registerCard.style.display = 'none';
+    loginCard.style.display = 'block';
+});
+
+showRegisterBtn.addEventListener('click', () => {
+    loginCard.style.display = 'none';
+    registerCard.style.display = 'block';
+});
+
+// Role Switcher on Login
+userRoleBtn.addEventListener('click', () => {
+    currentRole = 'user';
+    userRoleBtn.classList.add('active');
+    adminRoleBtn.classList.remove('active');
+    loginCard.classList.remove('admin-mode');
+});
+
+adminRoleBtn.addEventListener('click', () => {
+    currentRole = 'admin';
+    adminRoleBtn.classList.add('active');
+    userRoleBtn.classList.remove('active');
+    loginCard.classList.add('admin-mode');
+});
+
+// Registration Logic
+registrationForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    
+    const newUser = {
+        name: document.getElementById('reg-name').value,
+        email: document.getElementById('reg-email').value,
+        password: document.getElementById('reg-password').value,
+        mobile: document.getElementById('reg-mobile').value,
+        gender: document.getElementById('reg-gender').value,
+        city: document.getElementById('reg-city').value
+    };
+
+    // Get existing users
+    let users = JSON.parse(localStorage.getItem('women_safety_users') || '[]');
+    
+    // Check if email already exists
+    if (users.some(u => u.email === newUser.email)) {
+        alert("This email is already registered.");
+        return;
+    }
+
+    users.push(newUser);
+    localStorage.setItem('women_safety_users', JSON.stringify(users));
+
+    alert("Registration Successful! Please login.");
+    registerCard.style.display = 'none';
+    loginCard.style.display = 'block';
+});
+
+// Login Logic
+loginFormValidated.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const email = document.getElementById('login-email').value;
+    const password = document.getElementById('login-password').value;
+    
+    let isAuthenticated = false;
+
+    if (currentRole === 'admin') {
+        // Permanent Admin Credentials
+        if (email === '4mh23cs123@gmail.com' && password === 'Raghu@123') {
+            isAuthenticated = true;
+            adminDashboard.style.display = 'block';
+            populateAdminTable();
+        }
+    } else {
+        // Check local storage for user
+        const users = JSON.parse(localStorage.getItem('women_safety_users') || '[]');
+        const user = users.find(u => u.email === email && u.password === password);
+        if (user) {
+            isAuthenticated = true;
+            adminDashboard.style.display = 'none'; // Hide if previously shown
+        }
+    }
+
+    if (isAuthenticated) {
+        loginError.style.display = 'none';
+        triggerUnlockSequence();
+    } else {
+        loginError.style.display = 'block';
+    }
+});
+
+const populateAdminTable = () => {
+    const users = JSON.parse(localStorage.getItem('women_safety_users') || '[]');
+    usersTableBody.innerHTML = users.map(user => `
+        <tr>
+            <td>${user.name}</td>
+            <td>${user.email}</td>
+            <td>${user.mobile}</td>
+            <td>${user.gender}</td>
+            <td>${user.city}</td>
+        </tr>
+    `).join('') || '<tr><td colspan="5" style="text-align:center">No users registered yet.</td></tr>';
+};
+
+const triggerUnlockSequence = () => {
+    authPortal.classList.add('hidden');
+    setTimeout(() => {
+        unlockOverlay.classList.add('active');
+        setTimeout(() => {
+            unlockOverlay.classList.remove('active');
+            app.classList.remove('app-hidden');
+            app.classList.add('app-visible');
+            lucide.createIcons();
+            initMap();
+        }, 3000);
+    }, 1000);
+};
+
 
 // --- State ---
 let sosTimer = null;
@@ -86,21 +223,27 @@ const activateSos = () => {
     window.location.href = "tel:+919148433466";
 };
 
-sosBtn.addEventListener('mousedown', startSosTimer);
-sosBtn.addEventListener('mouseup', clearSosTimer);
-sosBtn.addEventListener('touchstart', (e) => { e.preventDefault(); startSosTimer(); });
-sosBtn.addEventListener('touchend', clearSosTimer);
+if (sosBtn) {
+    sosBtn.addEventListener('mousedown', startSosTimer);
+    sosBtn.addEventListener('mouseup', clearSosTimer);
+    sosBtn.addEventListener('touchstart', (e) => { e.preventDefault(); startSosTimer(); });
+    sosBtn.addEventListener('touchend', clearSosTimer);
+}
 
-cancelSos.addEventListener('click', () => {
-    emergencyAlert.style.display = 'none';
-});
+if (cancelSos) {
+    cancelSos.addEventListener('click', () => {
+        emergencyAlert.style.display = 'none';
+    });
+}
 
 // --- Stealth Mode ---
-stealthToggle.addEventListener('click', () => {
-    isStealth = true;
-    stealthUI.style.display = 'block';
-    document.body.style.cursor = 'auto';
-});
+if (stealthToggle) {
+    stealthToggle.addEventListener('click', () => {
+        isStealth = true;
+        stealthUI.style.display = 'block';
+        document.body.style.cursor = 'auto';
+    });
+}
 
 const startExitTimer = () => {
     stealthExitTimer = setTimeout(() => {
@@ -121,19 +264,21 @@ if (stealthLogo) {
 }
 
 // --- Fake Call ---
-fakeCallTrigger.addEventListener('click', () => {
-    setTimeout(() => {
-        fakeCallOverlay.style.display = 'flex';
-        playCallSound();
-    }, 1000);
-});
+if (fakeCallTrigger) {
+    fakeCallTrigger.addEventListener('click', () => {
+        setTimeout(() => {
+            fakeCallOverlay.style.display = 'flex';
+            playCallSound();
+        }, 1000);
+    });
+}
 
 const closeCall = () => {
     fakeCallOverlay.style.display = 'none';
 };
 
-declineCall.addEventListener('click', closeCall);
-acceptCall.addEventListener('click', closeCall);
+if (declineCall) declineCall.addEventListener('click', closeCall);
+if (acceptCall) acceptCall.addEventListener('click', closeCall);
 
 const playCallSound = () => {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -145,39 +290,41 @@ const playCallSound = () => {
 };
 
 // --- Police Siren (Dual Tone) ---
-sirenTrigger.addEventListener('click', () => {
-    isSirenActive = !isSirenActive;
-    if (isSirenActive) {
-        startSiren();
-        sirenTrigger.style.background = 'rgba(244, 63, 94, 0.4)';
-        
-        // Request and Display Real-time Location
-        if ("geolocation" in navigator) {
-            navigator.geolocation.getCurrentPosition((position) => {
-                const lat = position.coords.latitude.toFixed(4);
-                const lng = position.coords.longitude.toFixed(4);
-                
-                const alertToast = document.createElement('div');
-                alertToast.className = 'safety-toast';
-                alertToast.innerHTML = `<i data-lucide="shield"></i> DISPATCHED: Coords [${lat}, ${lng}] sent to <strong>Bengaluru Central Station</strong>`;
-                document.body.appendChild(alertToast);
-                lucide.createIcons();
-                setTimeout(() => alertToast.remove(), 5000);
-            }, () => {
-                // Fallback if denied
-                const alertToast = document.createElement('div');
-                alertToast.className = 'safety-toast';
-                alertToast.innerHTML = '<i data-lucide="shield"></i> ALERT: Dispatching general area location to Police Station...';
-                document.body.appendChild(alertToast);
-                lucide.createIcons();
-                setTimeout(() => alertToast.remove(), 4000);
-            });
+if (sirenTrigger) {
+    sirenTrigger.addEventListener('click', () => {
+        isSirenActive = !isSirenActive;
+        if (isSirenActive) {
+            startSiren();
+            sirenTrigger.style.background = 'rgba(244, 63, 94, 0.4)';
+            
+            // Request and Display Real-time Location
+            if ("geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition((position) => {
+                    const lat = position.coords.latitude.toFixed(4);
+                    const lng = position.coords.longitude.toFixed(4);
+                    
+                    const alertToast = document.createElement('div');
+                    alertToast.className = 'safety-toast';
+                    alertToast.innerHTML = `<i data-lucide="shield"></i> DISPATCHED: Coords [${lat}, ${lng}] sent to <strong>Bengaluru Central Station</strong>`;
+                    document.body.appendChild(alertToast);
+                    lucide.createIcons();
+                    setTimeout(() => alertToast.remove(), 5000);
+                }, () => {
+                    // Fallback if denied
+                    const alertToast = document.createElement('div');
+                    alertToast.className = 'safety-toast';
+                    alertToast.innerHTML = '<i data-lucide="shield"></i> ALERT: Dispatching general area location to Police Station...';
+                    document.body.appendChild(alertToast);
+                    lucide.createIcons();
+                    setTimeout(() => alertToast.remove(), 4000);
+                });
+            }
+        } else {
+            stopSiren();
+            sirenTrigger.style.background = 'var(--glass)';
         }
-    } else {
-        stopSiren();
-        sirenTrigger.style.background = 'var(--glass)';
-    }
-});
+    });
+}
 
 const startSiren = () => {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -206,42 +353,36 @@ const stopSiren = () => {
 };
 
 // --- Strobe Light ---
-triggerStrobe.addEventListener('click', () => {
-    isStrobeActive = !isStrobeActive;
-    if (isStrobeActive) {
-        triggerStrobe.style.background = 'rgba(34, 211, 238, 0.3)';
-        strobeInterval = setInterval(() => {
-            document.body.style.opacity = document.body.style.opacity === '0.1' ? '1' : '0.1';
-        }, 50);
-    } else {
-        clearInterval(strobeInterval);
-        document.body.style.opacity = '1';
-        triggerStrobe.style.background = 'var(--glass)';
-    }
-});
-
-// --- Discreet Record ---
-triggerRecord.addEventListener('click', () => {
-    triggerRecord.classList.toggle('recording');
-    if (triggerRecord.classList.contains('recording')) {
-        triggerRecord.style.background = 'rgba(244, 63, 94, 0.4)';
-        triggerRecord.querySelector('span').innerText = "RECORDING...";
-        console.log("Audio Recording Started (Simulation)");
-    } else {
-        triggerRecord.style.background = 'var(--glass)';
-        triggerRecord.querySelector('span').innerText = "Discreet Record";
-        console.log("Audio Recording Stopped and Encrypted.");
-    }
-});
-
-
-// --- AI Guardian ---
-const guardianFab = document.getElementById('guardian-fab');
-if (guardianFab) {
-    guardianFab.addEventListener('click', () => {
-        alert("Aura AI: Neural protection active. Scanning for safe paths...");
+if (triggerStrobe) {
+    triggerStrobe.addEventListener('click', () => {
+        isStrobeActive = !isStrobeActive;
+        if (isStrobeActive) {
+            triggerStrobe.style.background = 'rgba(34, 211, 238, 0.3)';
+            strobeInterval = setInterval(() => {
+                document.body.style.opacity = document.body.style.opacity === '0.1' ? '1' : '0.1';
+            }, 50);
+        } else {
+            clearInterval(strobeInterval);
+            document.body.style.opacity = '1';
+            triggerStrobe.style.background = 'var(--glass)';
+        }
     });
 }
 
-// Initialize Map
-initMap();
+// --- Discreet Record ---
+if (triggerRecord) {
+    triggerRecord.addEventListener('click', () => {
+        triggerRecord.classList.toggle('recording');
+        if (triggerRecord.classList.contains('recording')) {
+            triggerRecord.style.background = 'rgba(244, 63, 94, 0.4)';
+            triggerRecord.querySelector('span').innerText = "RECORDING...";
+            console.log("Audio Recording Started (Simulation)");
+        } else {
+            triggerRecord.style.background = 'var(--glass)';
+            triggerRecord.querySelector('span').innerText = "Discreet Record";
+            console.log("Audio Recording Stopped and Encrypted.");
+        }
+    });
+}
+
+// Note: initMap() is now called after successful login reveal.

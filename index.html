@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AURA | Advanced Safety Architecture</title>
-    <meta name="description" content="Aura Safety - The most advanced protection platform.">
+    <title>WOMEN SAFETY | Advanced Protection</title>
+    <meta name="description" content="WOMEN SAFETY Safety - The most advanced protection platform.">
     <link rel="stylesheet" href="./index.css">
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -12,7 +12,124 @@
 </head>
 <body>
     <div id="cursor-glow"></div>
-    <div id="app">
+
+    <!-- WOMEN SAFETY Portal (Visible First) -->
+    <div id="auth-portal" class="login-portal-overlay">
+        <div class="login-container">
+            <!-- Registration Card -->
+            <div id="register-card" class="login-card">
+                <div class="login-header">
+            <div class="logo">WOMEN SAFETY<span>_</span></div>
+                    <h2>Create Secure Account</h2>
+                    <p class="subtitle">Join the Advanced Protection Architecture</p>
+                </div>
+                <form id="registration-form" class="auth-form">
+                    <div class="form-group">
+                        <label for="reg-name"><i data-lucide="user"></i> Name</label>
+                        <input type="text" id="reg-name" placeholder="Full Name" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="reg-email"><i data-lucide="mail"></i> Email</label>
+                            <input type="email" id="reg-email" placeholder="email@gmail.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="reg-password"><i data-lucide="lock"></i> Password</label>
+                            <input type="password" id="reg-password" placeholder="Create Password" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="reg-mobile"><i data-lucide="phone"></i> Mobile</label>
+                            <input type="tel" id="reg-mobile" placeholder="+91..." required>
+                        </div>
+                        <div class="form-group">
+                            <label for="reg-gender">Gender</label>
+                            <select id="reg-gender" required>
+                                <option value="" disabled selected>Select</option>
+                                <option value="female">Female</option>
+                                <option value="male">Male</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-city">City</label>
+                        <input type="text" id="reg-city" placeholder="Your City" required>
+                    </div>
+                    <button type="submit" class="btn-glow full-width">Register Account</button>
+                </form>
+                <p class="auth-toggle">Already have an account? <span id="show-login">Login</span></p>
+            </div>
+
+            <!-- Login Card (Hidden initially) -->
+            <div id="login-card" class="login-card" style="display: none;">
+                <div class="login-header">
+            <div class="logo">WOMEN SAFETY<span>_</span></div>
+                    <h2>Secure Login</h2>
+                    <div class="role-switcher">
+                        <button id="user-role-btn" class="role-btn active">User</button>
+                        <button id="admin-role-btn" class="role-btn">Admin</button>
+                    </div>
+                </div>
+                <form id="login-form-validated" class="auth-form">
+                    <div class="form-group">
+                        <label for="login-email"><i data-lucide="mail"></i> Email</label>
+                        <input type="email" id="login-email" placeholder="email@gmail.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password"><i data-lucide="lock"></i> Password</label>
+                        <input type="password" id="login-password" placeholder="••••••••" required>
+                    </div>
+                    <div id="login-error" class="error-msg" style="display: none;">Incorrect email or password.</div>
+                    <button type="submit" class="btn-glow full-width">Enter Secure Zone</button>
+                </form>
+                <p class="auth-toggle">Need an account? <span id="show-register">Register</span></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Unlock Transition Overlay -->
+    <div id="unlock-overlay" class="unlock-overlay">
+        <div class="unlock-content">
+            <div class="scanning-line"></div>
+            <div class="unlock-arrow-container">
+                <i data-lucide="chevrons-down" class="unlock-arrow"></i>
+            </div>
+            <h2 class="unlock-text">DECRYPTING ACCESS...</h2>
+        </div>
+    </div>
+
+    <div id="app" class="app-hidden">
+        <!-- Admin Dashboard Section (Visible only to Admin) -->
+        <section id="admin-dashboard" class="section admin-section" style="display: none;">
+            <div class="section-header">
+                <h2 class="section-title">Admin Command Center</h2>
+                <div class="title-underline"></div>
+            </div>
+            <div class="admin-container">
+                <div class="admin-card">
+                    <h3>Registered Safety Nodes (Users)</h3>
+                    <div class="table-wrapper">
+                        <table id="users-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Mobile</th>
+                                    <th>Gender</th>
+                                    <th>City</th>
+                                </tr>
+                            </thead>
+                            <tbody id="users-table-body">
+                                <!-- Data injected via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Dev Recognition Header -->
         <div class="dev-bar">
             <div class="dev-content">
@@ -22,7 +139,7 @@
 
         <!-- Navigation -->
         <nav class="site-nav">
-            <div class="logo">AURA<span>_</span></div>
+            <div class="logo">WOMEN SAFETY<span>_</span></div>
             <div class="nav-links">
                 <a href="#hero">Genesis</a>
                 <a href="#features">Core</a>
@@ -160,9 +277,9 @@
 
         <footer class="site-footer">
             <div class="footer-bottom">
-                <p>&copy; 2026 AURA ARCHITECTURE. All rights reserved.</p>
+                <p>&copy; 2026 WOMEN SAFETY. All rights reserved.</p>
                 <div class="footer-links">
-                    <span>Developed with passion by the AURA Team</span>
+                    <span>Developed with passion by the WOMEN SAFETY Team</span>
                 </div>
             </div>
         </footer>
