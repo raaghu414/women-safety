@@ -458,33 +458,34 @@ if (sirenTrigger) {
             // Request and Display Real-time Location & Trigger Emergency Messaging
             if ("geolocation" in navigator) {
                 navigator.geolocation.getCurrentPosition((position) => {
-                    // Try SMS first as requested by user for Raghavendra
-                    sendEmergencySMS(position);
-                    
-                    // Also attempt WhatsApp/Share
-                    setTimeout(() => sendEmergencyWhatsApp(position), 1000);
-                    
                     startRealTimeTracking();
                     
-                    const lat = position.coords.latitude.toFixed(4);
-                    const lng = position.coords.longitude.toFixed(4);
-                    
                     const alertToast = document.createElement('div');
                     alertToast.className = 'safety-toast';
-                    alertToast.innerHTML = `<i data-lucide="shield"></i> BROADCASTING: SMS & WhatsApp sent to Raghavendra.`;
                     document.body.appendChild(alertToast);
-                    lucide.createIcons();
-                    setTimeout(() => alertToast.remove(), 5000);
+                    
+                    let countdown = 5;
+                    const countdownInterval = setInterval(() => {
+                        alertToast.innerHTML = `<i data-lucide="shield"></i> BROADCASTING IN ${countdown}s... [Raghavendra]`;
+                        lucide.createIcons();
+                        countdown--;
+                        
+                        if (countdown < 0) {
+                            clearInterval(countdownInterval);
+                            if (isSirenActive) { // Only send if siren still active
+                                sendEmergencySMS(position);
+                                setTimeout(() => sendEmergencyWhatsApp(position), 1000);
+                                alertToast.innerHTML = `<i data-lucide="shield"></i> BROADCAST COMPLETE: SMS & WhatsApp sent.`;
+                                lucide.createIcons();
+                                setTimeout(() => alertToast.remove(), 3000);
+                            }
+                        }
+                    }, 1000);
+
                 }, (err) => {
                     // Fallback to sending message even without exact location
-                    sendEmergencySMS(null);
-                    
-                    const alertToast = document.createElement('div');
-                    alertToast.className = 'safety-toast';
-                    alertToast.innerHTML = '<i data-lucide="shield"></i> ALERT: Sending emergency SMS without GPS...';
-                    document.body.appendChild(alertToast);
-                    lucide.createIcons();
-                    setTimeout(() => alertToast.remove(), 4000);
+                    alert("GPS Error. Sending emergency SMS to Raghavendra in 5s...");
+                    setTimeout(() => sendEmergencySMS(null), 5000);
                 });
             }
         } else {
