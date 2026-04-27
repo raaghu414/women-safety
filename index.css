@@ -579,7 +579,13 @@ body {
 .admin-section { padding-top: 100px; }
 .admin-container { max-width: 1200px; margin: 0 auto; padding: 0 5%; }
 .admin-card { background: var(--surface); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 30px; padding: 40px; overflow: hidden; }
-.admin-card h3 { margin-bottom: 25px; font-size: 1.4rem; color: var(--primary); }
+.admin-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; gap: 20px; flex-wrap: wrap; }
+.admin-card h3 { font-size: 1.4rem; color: var(--primary); margin: 0; }
+.admin-actions { display: flex; gap: 10px; }
+.admin-actions button { padding: 10px 20px; border-radius: 12px; font-size: 0.8rem; font-weight: 700; cursor: pointer; border: 1px solid rgba(255, 255, 255, 0.1); }
+.btn-secondary { background: rgba(255, 255, 255, 0.05); color: var(--text); }
+.btn-danger { background: rgba(244, 63, 94, 0.2); color: var(--danger); border-color: rgba(244, 63, 94, 0.3) !important; }
+.admin-actions button:hover { transform: translateY(-2px); filter: brightness(1.2); }
 
 .table-wrapper { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; text-align: left; }

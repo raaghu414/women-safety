@@ -144,6 +144,46 @@ const populateAdminTable = () => {
     `).join('') || '<tr><td colspan="6" style="text-align:center">No users registered yet.</td></tr>';
 };
 
+// --- Initialization & Session Recovery ---
+window.addEventListener('load', () => {
+    const session = JSON.parse(localStorage.getItem('women_safety_session') || 'null');
+    if (session && session.email === '4mh23cs123@gmail.com') {
+        // Recover Admin Dashboard
+        adminDashboard.style.display = 'block';
+        populateAdminTable();
+    }
+    
+    // Debug helper: Log current database state
+    const users = JSON.parse(localStorage.getItem('women_safety_users') || '[]');
+    console.log(`Database Initialized. ${users.length} users found.`);
+});
+
+// Admin DB Management
+const exportDbBtn = document.getElementById('export-db');
+const resetDbBtn = document.getElementById('reset-db');
+
+if (exportDbBtn) {
+    exportDbBtn.addEventListener('click', () => {
+        const users = localStorage.getItem('women_safety_users') || '[]';
+        const blob = new Blob([users], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `women_safety_database_${new Date().toISOString().split('T')[0]}.json`;
+        a.click();
+    });
+}
+
+if (resetDbBtn) {
+    resetDbBtn.addEventListener('click', () => {
+        if (confirm("CRITICAL: Are you sure you want to delete ALL registered user data? This cannot be undone.")) {
+            localStorage.removeItem('women_safety_users');
+            populateAdminTable();
+            alert("Database has been reset.");
+        }
+    });
+}
+
 const triggerUnlockSequence = () => {
     authPortal.classList.add('hidden');
     setTimeout(() => {

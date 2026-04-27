@@ -109,7 +109,13 @@
             </div>
             <div class="admin-container">
                 <div class="admin-card">
-                    <h3>Registered Safety Nodes (Users)</h3>
+                    <div class="admin-card-header">
+                        <h3>Registered Safety Nodes (Users)</h3>
+                        <div class="admin-actions">
+                            <button id="export-db" class="btn-secondary">Download Backup</button>
+                            <button id="reset-db" class="btn-danger">Clear All Data</button>
+                        </div>
+                    </div>
                     <div class="table-wrapper">
                         <table id="users-table">
                             <thead>
